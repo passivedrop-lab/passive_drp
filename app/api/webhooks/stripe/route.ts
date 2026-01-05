@@ -51,9 +51,6 @@ export async function POST(req: Request) {
                 customerEmail: session.customer_details?.email,
                 productId: offerId,
                 referrerId: referrerUser?.id, // Link if exists
-                product: {
-                    connect: { id: offerId } // Ensure product exists in DB seed!
-                }
             }
         });
 
