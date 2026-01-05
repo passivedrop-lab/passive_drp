@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id             String   @id @default(uuid())
+  email          String   @unique
+  passwordHash   String
+  role           String   @default("USER") // "ADMIN" or "USER"
+  referralCode   String   @unique // The "Link" identifier
+  createdAt      DateTime @default(now())
+  
+  // Financials
+  balance        Decimal  @default(0) // Available to withdraw
+  totalEarned    Decimal  @default(0) // Lifetime earnings
+
+  // Relations
+  orders         Order[]  @relation("ReferrerOrders")
+  payouts        Payout[]
+}
+
+model Product {
+  id          String   @id // 'offer-1', 'offer-2', 'offer-3'
+  name        String
+  price       Decimal
+  description String
+  redirectUrl String?  // Where to send user after buy (delivery)
+  
+  orders      Order[]
+}
+
+model Order {
+  id              String   @id @default(uuid())
+  status          String   // PENDING, COMPLETED, FAILED
+  amount          Decimal
+  paymentMethod   String   // STRIPE, CRYPTO_USDT
+  paymentId       String?  // Stripe session ID or TX Hash
+  customerEmail   String?
+  
+  productId       String
+  product         Product  @relation(fields: [productId], references: [id])
+  
+  referrerId      String?
+  referrer        User?    @relation("ReferrerOrders", fields: [referrerId], references: [id])
+  
+  createdAt       DateTime @default(now())
+}
+
+model Payout {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  amount    Decimal
+  method    String   // CRYPTO, BANK
+  status    String   // REQUESTED, PROCESSED
+  createdAt DateTime @default(now())
+}
