@@ -88,7 +88,7 @@ export default function OfferPage({
                         </div>
 
                         <div className="space-y-4">
-                            {offer.features.map((feature, i) => (
+                            {offer.features.map((feature: string, i: number) => (
                                 <div key={i} className="flex items-center gap-3 text-sm text-zinc-400">
                                     <Check className="h-4 w-4 text-green-500/50" />
                                     <span>{feature}</span>
