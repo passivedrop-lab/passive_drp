@@ -6,7 +6,7 @@ import Stripe from "stripe";
 
 // Create lib/stripe.ts first or instantiate here
 const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-    apiVersion: "2024-12-18.acacia",
+    apiVersion: "2025-12-15.clover",
 });
 
 export async function POST(req: Request) {
